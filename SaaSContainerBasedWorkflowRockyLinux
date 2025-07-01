@@ -1,0 +1,254 @@
+def gv
+def emailHandle
+def buildDir
+def stageDir
+//def BUILD_AGENT = 'SAAS_di2inpun2630lv0_yytwint'
+//def TEST_AGENT = 'SAAS_di2inpun2631lv0_yytwint'
+//def STAGE_AGENT = 'SAAS_di2inpun2631lv0_yytwint'
+def BUILD_AGENT = 'SAAS_di2inpun0050lv0_yytwint_build'
+def TEST_AGENT = 'SAAS_di2inpun0050lv0_yytwint_build'
+def STAGE_AGENT = 'SAAS_di2inpun0050lv0_yytwint_build'
+def boolean anyFailure = false
+
+pipeline {
+    agent { label "${BUILD_AGENT}" } // Define the default agent here
+
+    parameters {
+        string(name: 'NXRelease', defaultValue: 'nx2512.latest', description: 'Use the latest IP from NX2506 release to create the build.')
+        booleanParam(name: 'SeriesBuild', defaultValue: false, description: 'Enable SeriesRelease when Series release build is required')
+        string(name: 'SeriesName', defaultValue: '0', description: 'Provide the Series name for which you want to build the pipeline. series name format should be like "NX2506_Series.3000".')
+        string(name: 'UnitPath', defaultValue: '/apps/JenkinsBase/units/Dev', description: 'Path where build unit for the run is to be created.')
+        string(name: 'StagePath', defaultValue: '/apps/JenkinsBase/stage/Dev', description: 'Path where translator worker kits are to be staged.')
+        booleanParam(name: 'HC', defaultValue: false, description: 'Enable horizontal collaboration change package')
+        string(name: 'CPNumber', defaultValue: '0', description: 'CP number on top of NXRelease against which build and test steps to be executed.')
+        booleanParam(name: 'Deploy', defaultValue: false, description: 'Deploy staging directory contents to customer setup')
+    }
+
+    stages {
+        stage('Init') {
+            steps {
+                script {
+                    // Load shared scripts and initialize directories
+                    gv = load "ContainerBasedWorkflow.groovy"
+                    emailHandle = load "email.groovy"
+                    buildDir = "${params.UnitPath}/${params.NXRelease}_TranslatorWorker_${BUILD_TIMESTAMP}"
+                    stageDir = "${params.StagePath}/${params.NXRelease}_TranslatorWorker_${BUILD_TIMESTAMP}"
+                }
+            }
+        }
+
+        stage('CreateUnit') {
+            agent { label "${BUILD_AGENT}" }
+            steps {
+                script {
+                    def CP = params.CPNumber
+                    if (!params.HC || (params.HC && CP != "0")) {
+                        if (!params.SeriesBuild || (params.SeriesBuild && params.SeriesName != "0")) {
+                            echo 'Creating unit...'
+                            gv.CreateUnit(buildDir)
+                            BUILD_PROCESS_FLAG = true
+                        } else {
+                            error "Series Build option selected but Series name is not specified correctly. Skipping Group build and testing!"
+                            BUILD_PROCESS_FLAG = false
+                        }
+                    } else {
+                        error "HC option selected but CP number is not specified correctly. Skipping Group build and testing!"
+                        BUILD_PROCESS_FLAG = false
+                    }
+                }
+            }
+        }
+
+        stage('BuildUnit') {
+            agent { label "${BUILD_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+                    gv.BuildUnit(buildDir)
+                }
+            }
+        }
+
+        stage('TestUnit') {
+            agent { label "${TEST_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+                    echo "Running docker tests..."
+                    gv.TestUnit(buildDir)
+                }
+            }
+        }
+
+        stage('StageForContainer') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+					echo "stag for container..."
+                    gv.StageForContainer(buildDir, stageDir)
+                }
+            }
+        }
+
+        stage('CheckLicenseServer') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+                    echo "check license server..."
+					gv.CheckLicenseServer()
+                }
+            }
+        }
+
+        stage('RemoveRunningContainers-Pre') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+                    echo "remove running container..."
+					gv.RemoveRunningContainers()
+                }
+            }
+        }
+
+        stage('BuildAndRunDocker') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+					echo "BuildAndRunDocker..."
+                    try {
+                         gv.BuildAndRunDockerRockyLinux(buildDir, stageDir)
+                    } catch (Exception e) {
+                      echo 'Exception occurred: ' + e.toString()
+                      anyFailure = true
+                   }
+                }
+            }
+        }
+		stage('ValidateDockerTest') {
+            agent { label "${STAGE_AGENT}" }
+            steps {
+                script{
+                    try{
+                        gv.ValidateDockerTest()
+                    }
+                    catch (Exception e) {
+                        echo 'Exception occurred: ' + e.toString()
+                        anyFailure = true
+                    }
+                }
+            }
+        }
+        stage('DockerCleanup') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    script {
+                        echo "Docker cleanup..."
+						//gv.DockerCleanup(stageDir)
+                    }
+                }
+            }
+        }
+
+        stage('RemoveRunningContainers-Post') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+					echo "RemoveRunningContainers..."
+                    gv.RemoveRunningContainers()
+                }
+            }
+        }
+
+        stage('DeployContainer') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+					echo "deploy Containers..."
+                    gv.DeployContainer(buildDir, stageDir)
+                }
+            }
+        }
+
+        stage('Purge Unit') {
+            agent { label "${BUILD_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+                    if (!anyFailure) {
+                        gv.Purge(params.UnitPath)
+                    } else {
+                        echo "Skipping Purge Unit due to earlier failure"
+                    }
+                }
+            }
+        }
+
+        stage('Purge Stage') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+                    if (!anyFailure) {
+                        gv.Purge(params.StagePath)
+                    } else {
+                        echo "Skipping Purge Stage due to earlier failure"
+                    }
+                }
+            }
+        }
+
+        stage('Evaluate Status') {
+            steps {
+                script {
+                    if (anyFailure) {
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'All tasks completed successfully.'
+        }
+        failure {
+            echo 'One or more stages have failed.'
+        }
+        always {
+            script {
+                emailHandle.sendEmail(buildDir, stageDir)
+            }
+        }
+    }
+}

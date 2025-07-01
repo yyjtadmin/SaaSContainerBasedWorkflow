@@ -1,0 +1,28 @@
+#!/bin/ksh -f
+
+# @(#) ugtopv
+# @(#) Copyright 2021 Siemens Product Lifecycle Management Software Inc.
+# @(#) This script sets env variables and runs the ugtopv NX translator
+
+if [ -z "${UGII_BASE_DIR}" ]; then
+  echo "UGII_BASE_DIR environment variable is not set"
+  echo "Please set this environment variable before running the translator"
+  echo "Exiting..."
+  exit 1
+fi
+
+if [ -z "${SPLM_LICENSE_SERVER}" ]; then
+  echo "SPLM_LICENSE_SERVER environment variable is not set"
+  echo "Please set this environment variable before running the translator"
+  echo "Exiting..."
+  exit 1
+fi
+
+APPNAME=${UGII_BASE_DIR}/nxbin/ugtopv
+
+LD_LIBRARY_PATH=${UGII_BASE_DIR}/nxbin:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH
+
+export UGII_LIB_PATH=${UGII_BASE_DIR}/nxbin
+
+exec ${APPNAME} "${@}" -enable_hybrid_saas -single_part -config=${UGII_BASE_DIR}/tessUG_multicad.config

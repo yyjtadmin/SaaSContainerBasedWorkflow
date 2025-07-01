@@ -1,0 +1,17 @@
+#!/bin/ksh -f
+
+# @(#) caetojt
+# @(#) Copyright 2024 Siemens Product Lifecycle Management Software Inc.
+# @(#) This script sets env variables and runs the caetojt translator
+
+UGII_BASE_DIR=${PWD}
+export UGII_BASE_DIR
+
+APPNAME=${UGII_BASE_DIR}/nxbin/caetojt
+
+LD_LIBRARY_PATH=${UGII_BASE_DIR}/nxbin:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH
+
+export UGII_LIB_PATH=${UGII_BASE_DIR}/nxbin
+
+exec ${APPNAME} "${@}"
