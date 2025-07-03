@@ -10,7 +10,7 @@ fi
 
 UNIT_PATH=$1
 export SPLM_LICENSE_SERVER=29000@pnnxflex3:29000@pnnxflex4 
-/usr/site/devop_tools/bin/unit run ${UNIT_PATH} devtest runtest NXTranslators.rep:TranslatorWorker.set -p 6
+/usr/site/devop_tools/bin/unit run ${UNIT_PATH} devtest runtest NXTranslators.rep:NXJT_TranslatorWorker.set -p 6
 casesFailed=`grep "Number of tests:" ${UNIT_PATH}/dt/runs/devtestLastRunFails.txt | cut -d ":" -f2 | tr -d " "`
 if [ $casesFailed != 0 ]
 then
