@@ -1,10 +1,10 @@
 #!/bin/bash
 
-TEST="/volume/docker/Results"
-GOLD="/volume/docker/Gold"
+TEST="/volume/JenkinsBase/docker/Results"
+GOLD="/volume/JenkinsBase/docker/Gold"
 
 # Run JTCompare inside Docker and capture the result
-docker exec jtcompare_container /bin/bash /volume/docker/JTCompare_1.0.2/runcompare.sh "${GOLD}" "${TEST}"
+docker exec jtcompare_container /bin/bash /volume/jtcompare/JTCompare_1.0.2/runcompare.sh "${GOLD}" "${TEST}"
 RESULT=$?
 
 if [ $RESULT -ne 0 ]; then

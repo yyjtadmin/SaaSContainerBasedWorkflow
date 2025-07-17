@@ -3,8 +3,8 @@
 # Environment setup function
 SetUpEnvironment() {
     export LC_ALL="en_US.utf8"
-    export SPLM_LICENSE_SERVER="/volume/docker/License/ugslmd_license.lic"
-    export JT_COMPARE_INSTALL="/volume/docker/JTCompare_1.0.2"
+    export SPLM_LICENSE_SERVER="/volume/jtcompare/License/ugslmd_license.lic"
+    export JT_COMPARE_INSTALL="/volume/jtcompare/JTCompare_1.0.2"
 }
 
 # Check argument count early
