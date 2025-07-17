@@ -11,8 +11,8 @@ pipeline {
     agent any
 	parameters {
 		string(name: 'NXRelease', defaultValue: 'nx2306.latest', description : 'Use the latest IP from NX2306 release to create the build.')
-		string(name: 'UnitPath', defaultValue: '/apps/JenkinsBase/units/Dev', description : 'Path where build unit for the run is to be created.')
-		string(name: 'StagePath', defaultValue: '/apps/JenkinsBase/stage/Dev', description : 'Path where translator worker kits are to be staged.')
+		string(name: 'UnitPath', defaultValue: '/plm/pnnas/ppic/Data_Exchange/SaaS_distributions/cloudsetup/JenkinsBase/units/Dev', description : 'Path where build unit for the run is to be created.')
+		string(name: 'StagePath', defaultValue: '/plm/pnnas/ppic/Data_Exchange/SaaS_distributions/cloudsetup/JenkinsBase/stage/Dev', description : 'Path where translator worker kits are to be staged.')
 		booleanParam(name: 'Deploy', defaultValue: false, description : 'Deploy staging directory contents to customer setup')
 	}
     stages {

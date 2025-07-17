@@ -31,9 +31,9 @@ then
 		sed -i 's/DO_DLL_COMPARISON.*/DO_DLL_COMPARISON       1/g' $initFile
 	fi
 else
-    if [ ! -d "/apps/JenkinsBase/local_distrib/${SeriesName}" ] && [ ! -e "/apps/JenkinsBase/local_distrib/${SeriesName}/${SeriesName/_Series/}/init.def" ]; then
-        /usr/site/devop_tools/UDU/tools/bin/unx/udistrib -s -u -t /apps/JenkinsBase/local_distrib/${SeriesName}/ -p "common lnx64" -v @NX::${SeriesName} -L 1 -A
+    if [ ! -d "/plm/pnnas/ppic/Data_Exchange/SaaS_distributions/cloudsetup/JenkinsBase/local_distrib/${SeriesName}" ] && [ ! -e "/plm/pnnas/ppic/Data_Exchange/SaaS_distributions/cloudsetup/JenkinsBase/local_distrib/${SeriesName}/${SeriesName/_Series/}/init.def" ]; then
+        /usr/site/devop_tools/UDU/tools/bin/unx/udistrib -s -u -t /plm/pnnas/ppic/Data_Exchange/SaaS_distributions/cloudsetup/JenkinsBase/local_distrib/${SeriesName}/ -p "common lnx64" -v @NX::${SeriesName} -L 1 -A
     fi
-    /usr/site/devop_tools/bin/unit add -p /apps/JenkinsBase/local_distrib/${SeriesName}/${SeriesName/_Series/} ${UNIT_PATH}
+    /usr/site/devop_tools/bin/unit add -p /plm/pnnas/ppic/Data_Exchange/SaaS_distributions/cloudsetup/JenkinsBase/local_distrib/${SeriesName}/${SeriesName/_Series/} ${UNIT_PATH}
     #C:\apps\devop_tools\UDU\tools\bin\wnt\runme.bat C:\apps\devop_tools\UDU\tools\udistrib.pl  -v "@NX::NX2312_Series.3000" -p "common lnx64 " -C -s -u -L 1 -t "C:\workdir\delete"
 fi
