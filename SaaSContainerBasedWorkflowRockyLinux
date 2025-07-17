@@ -80,7 +80,7 @@ pipeline {
             steps {
                 script {
                     echo "Running docker tests..."
-                //    gv.TestUnit(buildDir)
+                    gv.TestUnit(buildDir)
                 }
             }
         }
@@ -93,7 +93,7 @@ pipeline {
             steps {
                 script {
 					echo "stag for container..."
-                //    gv.StageForContainer(buildDir, stageDir)
+                    gv.StageForContainer(buildDir, stageDir)
                 }
             }
         }
@@ -132,12 +132,12 @@ pipeline {
             steps {
                 script {
 					echo "BuildAndRunDocker..."
-                    //try {
-                    //     gv.BuildAndRunDockerRockyLinux(buildDir, stageDir)
-                    //} catch (Exception e) {
-                    //  echo 'Exception occurred: ' + e.toString()
-                    //  anyFailure = true
-                    //}
+                    try {
+                         gv.BuildAndRunDockerRockyLinux(buildDir, stageDir)
+                    } catch (Exception e) {
+                      echo 'Exception occurred: ' + e.toString()
+                      anyFailure = true
+                    }
                 }
             }
         }
@@ -146,13 +146,13 @@ pipeline {
             steps {
                 script{
 					echo "validate docker result..."
-                    //try{
-                    //    gv.ValidateDockerTest()
-                    //}
-                    //catch (Exception e) {
-                    //    echo 'Exception occurred: ' + e.toString()
-                    //    anyFailure = true
-                    //}
+                    try{
+                        gv.ValidateDockerTest()
+                    }
+                    catch (Exception e) {
+                        echo 'Exception occurred: ' + e.toString()
+                        anyFailure = true
+                    }
                 }
             }
         }
@@ -165,7 +165,7 @@ pipeline {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     script {
                         echo "Docker cleanup..."
-						//gv.DockerCleanup(stageDir)
+						gv.DockerCleanup(stageDir)
                     }
                 }
             }
