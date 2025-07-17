@@ -58,11 +58,6 @@ def sendEmail(String buildDir, String stageDir)
 					<td class="tg-hmp3">${stageDir}</td>
 				  </tr>
 				  <tr>
-					<td class="tg-0lax">Customer</td>
-					<td class="tg-ur59">${params.Customer}</td>
-				  </tr>
-				  
-				  <tr>
 					<td class="tg-hmp3">Deploy flag</td>
 					<td class="tg-hmp3">${params.Deploy}</td>
 				  </tr>
@@ -87,7 +82,7 @@ def sendEmail(String buildDir, String stageDir)
 	emailext(
 		subject: subject,
 		body: details,
-		to: 'yytwint.sisw@siemens.com,nilesh.lakhotia@siemens.com,dattaprasad.sonawadekar@siemens.com,rakesh.thakur@siemens.com,roma.mohapatra@siemens.com'
+		to: 'nilesh.lakhotia@siemens.com,dattaprasad.sonawadekar@siemens.com,rakesh.thakur@siemens.com,roma.mohapatra@siemens.com'
 	)
 }
 return this
