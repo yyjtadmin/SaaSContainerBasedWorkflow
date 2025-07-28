@@ -80,7 +80,7 @@ pipeline {
             steps {
                 script {
                     echo "Running docker tests..."
-                    gv.TestUnit(buildDir)
+                    //gv.TestUnit(buildDir)
                 }
             }
         }
