@@ -10,4 +10,4 @@ fi
 
 STAGE_DIR=$1
 
-rm -rf ${STAGE_DIR}/TranslatorBinaries/dockerfile* || { exit 1;}
+rm -rf ${STAGE_DIR}/TranslatorBinaries/Dockerfile* || { exit 1;}
