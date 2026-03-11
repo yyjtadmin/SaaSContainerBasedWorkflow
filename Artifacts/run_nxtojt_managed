@@ -1,0 +1,22 @@
+#!/bin/ksh -f
+
+# @(#) ugtopv
+# @(#) Copyright 2026 Siemens Product Lifecycle Management Software Inc.
+# @(#) This script sets env variables and runs the ugtopv NX translator
+
+UGII_BASE_DIR=${PWD}
+export UGII_BASE_DIR
+
+APPNAME=${UGII_BASE_DIR}/nxbin/ugtopv
+
+LD_LIBRARY_PATH=${UGII_BASE_DIR}/nxbin:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH
+
+export UGII_LIB_PATH=${UGII_BASE_DIR}/nxbin
+
+export UGII_UGMGR_COMMUNICATION=HTTP
+
+export MANAGED_SESSION_EXCHANGE=clientGrant
+        
+exec ${APPNAME} "${@}"
+

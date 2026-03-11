@@ -9,5 +9,4 @@ then
 fi
 
 STAGE_DIR=$1
-
-rm -rf ${STAGE_DIR}/TranslatorBinaries/Dockerfile* || { exit 1;}
+find ${STAGE_DIR}/TranslatorBinaries -type f -iname "dockerfile*" -delete
