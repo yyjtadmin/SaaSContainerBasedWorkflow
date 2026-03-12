@@ -43,7 +43,7 @@ cp -f ${CUSTOMER_ARTIFACTS_DIR}/run_nxtojt ${RUN_NXTOJT} || { exit 1;}
 cp -f ${CUSTOMER_ARTIFACTS_DIR}/run_nxtojt_managed ${RUN_NXTOJT_MANAGED} || { exit 1;}
 cp -f ${CUSTOMER_ARTIFACTS_DIR}/tessUG_multicad.config ${CONFIG_FILE_MULTICAD} || { exit 1;}
 cp -f ${CUSTOMER_ARTIFACTS_DIR}/tessUG_vis.config ${CONFIG_FILE_VIS} || { exit 1;}
-cp -f ${CUSTOMER_ARTIFACTS_DIR}/tessUG_managed.config ${CONFIG_FILE_VIS}/ || { exit 1;}
+cp -f ${CUSTOMER_ARTIFACTS_DIR}/tessUG_managed.config ${CONFIG_FILE_MANAGED} || { exit 1;}
 cp -f ${CUSTOMER_ARTIFACTS_DIR}/NXJT_Translator_README.txt ${STAGE_BASE_DIR}/ || { exit 1;}
 
 chmod 0755 ${CONFIG_FILE_MULTICAD} || { exit 1;}
