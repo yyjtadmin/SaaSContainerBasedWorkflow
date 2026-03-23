@@ -80,7 +80,7 @@ pipeline {
             steps {
                 script {
                     echo "Running docker tests..."
-                    //gv.TestUnit(buildDir)
+                    gv.TestUnit(buildDir)
                 }
             }
         }
@@ -133,7 +133,7 @@ pipeline {
                 script {
 					echo "BuildAndRunDocker..."
                     try {
-                         //gv.BuildAndRunDockerRockyLinux(buildDir, stageDir)
+                         gv.BuildAndRunDockerRockyLinux(buildDir, stageDir)
                     } catch (Exception e) {
                       echo 'Exception occurred: ' + e.toString()
                       anyFailure = true
