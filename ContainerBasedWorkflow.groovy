@@ -114,14 +114,15 @@ def DeployContainer(String buildDir,String stageDir)
 	}
 }
 
-def RemoveFiles() {
+def RemoveFiles(String stageDir) {
     echo "Remove files..."
 
     script {
         def inputfile = "./shellScripts/input_list.txt"
-
+		def stagePath="${stageDir}"
+		
         sh "chmod +x ./shellScripts/delete_files.sh"
-        sh "./shellScripts/delete_files.sh ${inputfile}"
+        sh "./shellScripts/delete_files.sh ${inputfile} ${stagePath}"
     }
 }
 

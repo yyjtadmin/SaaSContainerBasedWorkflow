@@ -1,29 +1,35 @@
 #!/bin/bash
 
 # Enable debug
-set -o errexit   # exit on error
-set -o pipefail  # catch pipe errors
-set -o nounset   # undefined variable error
-set -x           # 🔥 print each command (very useful)
+set -o errexit
+set -o pipefail
+set -o nounset
+set -x
 
 echo "===== DEBUG: Script Started ====="
 
-# Check if input file is provided
-if [ $# -lt 1 ]; then
-    echo "ERROR: No input file provided"
-    echo "Usage: $0 <input_file>"
+# Check arguments
+if [ $# -lt 2 ]; then
+    echo "ERROR: Missing arguments"
+    echo "Usage: $0 <input_file> <stage_dir>"
     exit 1
 fi
 
 INPUT_FILE="$1"
-START_DIR="$(pwd)"
+START_DIR="$2"   # 👈 Use stagedir instead of pwd
 
 echo "DEBUG: Input file = $INPUT_FILE"
-echo "DEBUG: Start directory = $START_DIR"
+echo "DEBUG: Start directory (stage dir) = $START_DIR"
 
-# Check if file exists
+# Validate input file
 if [ ! -f "$INPUT_FILE" ]; then
     echo "ERROR: Input file does not exist: $INPUT_FILE"
+    exit 1
+fi
+
+# Validate stage directory
+if [ ! -d "$START_DIR" ]; then
+    echo "ERROR: Stage directory does not exist: $START_DIR"
     exit 1
 fi
 
@@ -40,22 +46,19 @@ do
     echo "------------------------------------"
     echo "DEBUG: Raw line = '$filename'"
 
-    # Trim spaces
     filename=$(echo "$filename" | xargs)
 
     echo "DEBUG: Trimmed filename = '$filename'"
 
-    # Skip empty lines
     if [ -z "$filename" ]; then
         echo "DEBUG: Skipping empty line"
         continue
     fi
 
-    echo "Looking for: $filename"
+    echo "Looking for: $filename in $START_DIR"
 
     MATCH_COUNT=0
 
-    # Find and delete matching files
     while IFS= read -r file
     do
         echo "DEBUG: Found file = $file"

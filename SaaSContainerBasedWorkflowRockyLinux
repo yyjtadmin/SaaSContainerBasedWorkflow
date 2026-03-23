@@ -192,7 +192,7 @@ pipeline {
             steps {
                 script {
 					echo "Remove Files..."
-                    gv.RemoveFiles()
+                    gv.RemoveFiles(stageDir)
                 }
             }
         }
