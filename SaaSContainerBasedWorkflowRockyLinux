@@ -183,6 +183,19 @@ pipeline {
                 }
             }
         }
+		
+		stage('RemoveFiles') {
+            agent { label "${STAGE_AGENT}" }
+            when {
+                expression { BUILD_PROCESS_FLAG }
+            }
+            steps {
+                script {
+					echo "Remove Files..."
+                    gv.RemoveFiles()
+                }
+            }
+        }
 
         stage('DeployContainer') {
             agent { label "${STAGE_AGENT}" }

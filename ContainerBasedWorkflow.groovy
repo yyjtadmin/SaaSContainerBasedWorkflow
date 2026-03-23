@@ -114,6 +114,17 @@ def DeployContainer(String buildDir,String stageDir)
 	}
 }
 
+def RemoveFiles() {
+    echo "Remove files..."
+
+    script {
+        def inputfile = "./shellScripts/input_list.txt"
+
+        sh "chmod +x ./shellScripts/delete_files.sh"
+        sh "./shellScripts/delete_files.sh ${inputfile}"
+    }
+}
+
 def Purge(String dirName)
 {
 	echo "Executing Purge ..."

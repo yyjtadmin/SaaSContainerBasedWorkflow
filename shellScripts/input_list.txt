@@ -1,0 +1,15 @@
+libfbxsdk.so
+libgsoap.so
+cgmisdi.so 
+libonestep.so 
+vcheck.so
+libplmxmlAdapterJT60.so
+libplmxmlAdapterXT60.so
+libplmxmlAdapter3DXML.so
+libplmxmlAdapterG3D.so
+libplmxmlAdapterIFC.so
+libplmxmlAdapterInventor.so
+libplmxmlAdapterOBJ.so
+libplmxmlAdapterRhino.so
+libobj.so
+libpsfoundationsOBJ.so
