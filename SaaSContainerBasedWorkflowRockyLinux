@@ -2,12 +2,10 @@ def gv
 def emailHandle
 def buildDir
 def stageDir
-def BUILD_AGENT = 'di2inpun2631lv0'
+//def BUILD_AGENT = 'di2inpun2631lv0'
+def BUILD_AGENT = 'di2inpun2630lv0'
 def TEST_AGENT = 'di2inpun2630lv0'
 def STAGE_AGENT = 'di2inpun2630lv0'
-//def BUILD_AGENT = 'di2inpun2630lv0'
-//def TEST_AGENT = 'di2inpun2630lv0'
-//def STAGE_AGENT = 'di2inpun2630lv0'
 def boolean anyFailure = false
 
 pipeline {
