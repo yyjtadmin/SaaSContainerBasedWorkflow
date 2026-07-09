@@ -14,6 +14,9 @@ HC_FLAG=$3
 SeriesFlag=$4
 SeriesName=$5
 
+# Set the DMS_PRODUCT environment variable (assuming this is intended for the shell environment)
+export DMS_PRODUCT='NX'
+
 if [ ${SeriesFlag} == "false" ]
 then 
 	if [ ${HC_FLAG} == "false" ]
