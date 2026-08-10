@@ -17,6 +17,9 @@ SeriesName=$5
 # Set the DMS_PRODUCT environment variable (assuming this is intended for the shell environment)
 export DMS_PRODUCT='NX'
 
+# Trust JT environment
+jt trust -f
+
 if [ ${SeriesFlag} == "false" ]
 then 
 	if [ ${HC_FLAG} == "false" ]
